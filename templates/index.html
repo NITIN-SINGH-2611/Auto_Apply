@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Bot - Control Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .control-panel {
+            text-align: center;
+        }
+
+        .apply-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px 60px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .apply-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .apply-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .apply-button.running {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .status-section {
+            margin-top: 30px;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .status-header h2 {
+            color: #333;
+        }
+
+        .status-badge {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .status-badge.ready {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-badge.running {
+            background: #2196F3;
+            color: white;
+        }
+
+        .status-badge.complete {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-badge.error {
+            background: #f44336;
+            color: white;
+        }
+
+        .progress-bar-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 30px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .status-message {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .status-message.error {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+
+        .results-section {
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .jobs-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .job-item {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .job-item h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .job-item .company {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .job-item .score {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .logs-section {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 3px 0;
+        }
+
+        .log-entry.error {
+            color: #f48771;
+        }
+
+        .log-entry.warning {
+            color: #dcdcaa;
+        }
+
+        .log-entry.info {
+            color: #4ec9b0;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .stop-button {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            font-size: 1em;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-left: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .stop-button:hover {
+            background: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Job Application Bot</h1>
+            <p>Automated Job Search & Application System</p>
+        </div>
+
+        <div class="card control-panel">
+            <button id="applyButton" class="apply-button" onclick="startBot()">
+                <span id="buttonText">🚀 Start Job Application</span>
+            </button>
+            <button id="stopButton" class="stop-button" onclick="stopBot()" style="display: none;">
+                ⏹ Stop
+            </button>
+        </div>
+
+        <div class="card status-section">
+            <div class="status-header">
+                <h2>Status</h2>
+                <span id="statusBadge" class="status-badge ready">Ready</span>
+            </div>
+            
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar" style="width: 0%">0%</div>
+            </div>
+
+            <div id="statusMessage" class="status-message">
+                Ready to start job application process. Click the button above to begin.
+            </div>
+
+            <div id="errorMessage" class="status-message error" style="display: none;"></div>
+        </div>
+
+        <div id="resultsSection" class="card results-section">
+            <h2>Results</h2>
+            <div id="statsGrid" class="stats-grid"></div>
+            <div id="jobsList" class="jobs-list"></div>
+        </div>
+
+        <div class="card">
+            <h2>Activity Logs</h2>
+            <div id="logsContainer" class="logs-section">
+                <div class="log-entry info">Waiting for bot to start...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let statusCheckInterval = null;
+        let logsCheckInterval = null;
+
+        function updateStatus() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    // Update status badge
+                    const badge = document.getElementById('statusBadge');
+                    const button = document.getElementById('applyButton');
+                    const stopButton = document.getElementById('stopButton');
+                    const statusMessage = document.getElementById('statusMessage');
+                    const errorMessage = document.getElementById('errorMessage');
+                    const progressBar = document.getElementById('progressBar');
+
+                    if (data.running) {
+                        badge.textContent = 'Running';
+                        badge.className = 'status-badge running';
+                        button.disabled = true;
+                        button.classList.add('running');
+                        document.getElementById('buttonText').innerHTML = '<span class="loading-spinner"></span> Processing...';
+                        stopButton.style.display = 'inline-block';
+                    } else if (data.error) {
+                        badge.textContent = 'Error';
+                        badge.className = 'status-badge error';
+                        button.disabled = false;
+                        button.classList.remove('running');
+                        document.getElementById('buttonText').textContent = '🚀 Start Job Application';
+                        stopButton.style.display = 'none';
+                        errorMessage.textContent = data.error;
+                        errorMessage.style.display = 'block';
+                    } else if (data.results) {
+                        badge.textContent = 'Complete';
+                        badge.className = 'status-badge complete';
+                        button.disabled = false;
+                        button.classList.remove('running');
+                        document.getElementById('buttonText').textContent = '🚀 Start Job Application';
+                        stopButton.style.display = 'none';
+                        showResults(data.results);
+                    } else {
+                        badge.textContent = 'Ready';
+                        badge.className = 'status-badge ready';
+                        button.disabled = false;
+                        button.classList.remove('running');
+                        document.getElementById('buttonText').textContent = '🚀 Start Job Application';
+                        stopButton.style.display = 'none';
+                    }
+
+                    // Update progress
+                    progressBar.style.width = data.progress + '%';
+                    progressBar.textContent = data.progress + '%';
+
+                    // Update message
+                    if (data.message) {
+                        statusMessage.textContent = data.message;
+                    }
+
+                    // Update current step
+                    if (data.current_step) {
+                        statusMessage.textContent = `[${data.current_step}] ${data.message || ''}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching status:', error);
+                });
+        }
+
+        function updateLogs() {
+            fetch('/api/logs')
+                .then(response => response.json())
+                .then(data => {
+                    const logsContainer = document.getElementById('logsContainer');
+                    logsContainer.innerHTML = '';
+                    
+                    data.logs.slice(-50).forEach(log => {
+                        const logEntry = document.createElement('div');
+                        logEntry.className = `log-entry ${log.level.toLowerCase()}`;
+                        logEntry.textContent = `[${log.timestamp}] [${log.level}] ${log.message}`;
+                        logsContainer.appendChild(logEntry);
+                    });
+                    
+                    // Auto-scroll to bottom
+                    logsContainer.scrollTop = logsContainer.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Error fetching logs:', error);
+                });
+        }
+
+        function startBot() {
+            fetch('/api/start', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert('Error: ' + data.error);
+                    } else {
+                        // Start polling for status
+                        if (!statusCheckInterval) {
+                            statusCheckInterval = setInterval(updateStatus, 1000);
+                            logsCheckInterval = setInterval(updateLogs, 2000);
+                        }
+                        updateStatus();
+                        updateLogs();
+                    }
+                })
+                .catch(error => {
+                    alert('Error starting bot: ' + error.message);
+                });
+        }
+
+        function stopBot() {
+            if (confirm('Are you sure you want to stop the bot?')) {
+                fetch('/api/stop', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        updateStatus();
+                    })
+                    .catch(error => {
+                        alert('Error stopping bot: ' + error.message);
+                    });
+            }
+        }
+
+        function showResults(results) {
+            const resultsSection = document.getElementById('resultsSection');
+            const statsGrid = document.getElementById('statsGrid');
+            const jobsList = document.getElementById('jobsList');
+
+            resultsSection.classList.add('show');
+
+            // Show stats
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <h3>${results.total_jobs_found}</h3>
+                    <p>Total Jobs Found</p>
+                </div>
+                <div class="stat-card">
+                    <h3>${results.matched_jobs_count}</h3>
+                    <p>Matched Jobs</p>
+                </div>
+                <div class="stat-card">
+                    <h3>${results.applied_jobs_count}</h3>
+                    <p>Applied Successfully</p>
+                </div>
+                <div class="stat-card">
+                    <h3>${results.failed_applications_count}</h3>
+                    <p>Failed Applications</p>
+                </div>
+            `;
+
+            // Show top matched jobs
+            if (results.top_matched_jobs && results.top_matched_jobs.length > 0) {
+                jobsList.innerHTML = '<h3>Top Matched Jobs</h3>';
+                results.top_matched_jobs.forEach(job => {
+                    const jobItem = document.createElement('div');
+                    jobItem.className = 'job-item';
+                    jobItem.innerHTML = `
+                        <h4>${job.title}</h4>
+                        <div class="company">${job.company} - ${job.location}</div>
+                        <span class="score">Match: ${job.score}%</span>
+                        ${job.url ? `<br><a href="${job.url}" target="_blank" style="color: #667eea; text-decoration: none; font-size: 0.85em;">View Job →</a>` : ''}
+                    `;
+                    jobsList.appendChild(jobItem);
+                });
+            }
+        }
+
+        // Initialize
+        updateStatus();
+        updateLogs();
+        
+        // Start polling
+        statusCheckInterval = setInterval(updateStatus, 2000);
+        logsCheckInterval = setInterval(updateLogs, 3000);
+    </script>
+</body>
+</html>
