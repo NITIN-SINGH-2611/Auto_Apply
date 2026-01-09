@@ -1,0 +1,89 @@
+{
+  "credentials": {
+    "naukri": {
+      "email": "your_email@example.com",
+      "password": "your_password"
+    },
+    "linkedin": {
+      "email": "your_email@example.com",
+      "password": "your_password"
+    },
+    "indeed": {
+      "email": "your_email@example.com",
+      "password": "your_password"
+    }
+  },
+  "profile": {
+    "name": "Nitin Singh Samant",
+    "email": "19BCS2408@gmail.com",
+    "phone": "",
+    "location": "Navi Mumbai, India",
+    "current_role": "Java Backend Developer & DevOps Engineer",
+    "experience_years": 2,
+    "skills": [
+      "Java",
+      "Python",
+      "SQL",
+      "Spring Boot",
+      "REST APIs",
+      "Microservices",
+      "MySQL",
+      "Docker",
+      "Microsoft Azure",
+      "CI/CD",
+      "DevOps"
+    ],
+    "education": {
+      "degree": "B.Tech in Computer Science and Engineering",
+      "university": "Chandigarh University",
+      "graduation_year": 2023,
+      "cgpa": 7.3
+    },
+    "resume_path": "../Updated-Latest.pdf",
+    "cover_letter": "I am a dedicated Java Backend Engineer with 2+ years of industry experience specializing in building scalable Spring Boot-based enterprise applications, designing robust RESTful APIs, and developing SQL-driven backend systems."
+  },
+  "job_search": {
+    "keywords": [
+      "Java Developer",
+      "Backend Developer",
+      "Spring Boot",
+      "Microservices",
+      "DevOps Engineer",
+      "Java Backend",
+      "REST API Developer"
+    ],
+    "locations": [
+      "Mumbai",
+      "Pune",
+      "Bangalore",
+      "Hyderabad",
+      "Delhi",
+      "Navi Mumbai",
+      "Remote"
+    ],
+    "experience_range": {
+      "min": 1,
+      "max": 5
+    },
+    "salary_range": {
+      "min": 0,
+      "max": 0
+    },
+    "job_type": [
+      "Full-time",
+      "Permanent"
+    ],
+    "min_match_score": 70,
+    "max_jobs_per_platform": 50,
+    "auto_apply": true,
+    "apply_delay_seconds": 5
+  },
+  "settings": {
+    "headless": false,
+    "browser": "chrome",
+    "implicit_wait": 10,
+    "page_load_timeout": 30,
+    "screenshot_on_error": true,
+    "log_level": "INFO"
+  }
+}

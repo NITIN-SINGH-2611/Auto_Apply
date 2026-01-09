@@ -1,0 +1,35 @@
+# Configuration files with credentials
+config.json
+
+# Logs
+*.log
+job_bot.log
+
+# Results
+job_search_results.json
+job_bot_report.txt
+
+# Screenshots
+*.png
+*.jpg
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
